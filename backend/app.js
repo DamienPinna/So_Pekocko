@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const db = require('./config-db');
+const User = require('./models/user');
 
 const app = express();
 
@@ -19,9 +20,11 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-app.post('/api/auth/signup', (req, res, next) => {
+app.post('/api/auth/signup', (req, res) => {
    console.log(req.body);
-   res.status(201).end('ok')
+   res.status(201).json({
+      message: "utilisateur inscrit"
+   });
 });
 
 module.exports = app;
