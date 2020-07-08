@@ -2,8 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const db = require('./config-db');
+const token = require('./config-token');
 const User = require('./models/user');
 
 const app = express();
@@ -34,6 +36,29 @@ app.post('/api/auth/signup', async (req, res) => {
    } catch (error) {
       res.status(500).json({error});
    }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+   try {
+      const user = await User.findOne({email: req.body.email});
+      if(!user) return res.status(401).json({error: 'Utilisateur non trouvé !'});
+      try {
+         const valid = await bcrypt.compare(req.body.password, user.password);
+         if(!valid) return res.status(401).json({error: 'Mot de passe incorrect.'});
+         res.status(200).json({
+            userId: user._id,
+            token: jwt.sign(
+               {userId: user._id},
+               `${token.secret}`,
+               {expiresIn: '24h'}
+            )
+         });
+      } catch (error) {
+         res.status(500).json({error});
+      };
+   } catch (error) {
+      res.status(500).json({error});
+   };
 });
 
 module.exports = app;
