@@ -1,0 +1,26 @@
+{
+  "name": "backend_p6_so_pokocko",
+  "version": "1.0.0",
+  "description": "Backend du projet 6 du parcours developpeur web d'Openclassrooms",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DamienPinna/So_Pekocko.git"
+  },
+  "author": "Damien Pinna",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DamienPinna/So_Pekocko/issues"
+  },
+  "homepage": "https://github.com/DamienPinna/So_Pekocko#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
