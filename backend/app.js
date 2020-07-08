@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
 const db = require('./config-db');
 
@@ -16,18 +17,11 @@ app.use((req, res, next) => {
    next();
  });
 
-app.use((req, res, next) => {
-  console.log('Requête reçue !');
-  next();
-});
+app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-  res.status(201);
-  next();
-});
-
-app.use((req, res, next) => {
-  res.send('Votre requête a bien été reçue !');
+app.post('/api/auth/signup', (req, res, next) => {
+   console.log(req.body);
+   res.status(201).end('ok')
 });
 
 module.exports = app;
