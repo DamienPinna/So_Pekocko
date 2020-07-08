@@ -1,5 +1,13 @@
 const express = require('express');
+const mongoose = require('mongoose');
+
+const db = require('./config-db');
+
 const app = express();
+
+mongoose.connect(`mongodb+srv://${db.users}:${db.password}@flachibou-34bhw.gcp.mongodb.net/${db.name}?retryWrites=true&w=majority`, {useNewUrlParser: true, useUnifiedTopology: true})
+  .then(() => console.log('Connexion à MongoDB réussie.'))
+  .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 app.use((req, res, next) => {
    res.setHeader('Access-Control-Allow-Origin', '*');
@@ -20,7 +28,6 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
   res.send('Votre requête a bien été reçue !');
-  next();
 });
 
 module.exports = app;
