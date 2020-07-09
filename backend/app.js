@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const db = require('./config-db');
-const token = require('./config-token');
+const auth = require('./config-token');
 const User = require('./models/user');
 
 const app = express();
@@ -49,7 +49,7 @@ app.post('/api/auth/login', async (req, res) => {
             userId: user._id,
             token: jwt.sign(
                {userId: user._id},
-               `${token.secret}`,
+               `${auth.secret}`,
                {expiresIn: '24h'}
             )
          });
