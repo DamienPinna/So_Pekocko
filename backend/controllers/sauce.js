@@ -1,5 +1,7 @@
 const Sauce = require('../models/sauce');
 const fs = require('fs');
+const { find } = require('../models/sauce');
+const sauce = require('../models/sauce');
 
 exports.createSauce = (req, res) => {
    const sauceObject = JSON.parse(req.body.sauce);
@@ -13,12 +15,22 @@ exports.createSauce = (req, res) => {
     .catch(error => res.status(400).json({error}));
 };
 
-exports.modifySauce = (req, res) => {
-   const sauceObject = req.file ? 
-   {
-      ...JSON.parse(req.body.sauce),
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-   } : { ...req.body };
+exports.modifySauce = async (req, res) => {
+   let sauceObject;
+   if (req.file) {
+      const sauce = await Sauce.findOne({_id: req.params.id});
+      const filenameToBeDeleted = sauce.imageUrl.split('/images/')[1];
+      fs.unlink(`images/${filenameToBeDeleted}`, error => {
+         if (error) throw error;
+         console.log(`${filenameToBeDeleted} n'a pas pu être supprimé`);
+      });
+      sauceObject = {
+         ...JSON.parse(req.body.sauce),
+         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+      };
+   } else {
+      sauceObject = { ...req.body };
+   };
    Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
       .then(() => res.status(200).json({ message: 'Sauce modifiée !'}))
       .catch(error => res.status(400).json({error}));
