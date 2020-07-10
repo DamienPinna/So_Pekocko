@@ -1,7 +1,10 @@
 const Sauce = require('../models/sauce');
 const fs = require('fs');
-const { find } = require('../models/sauce');
-const sauce = require('../models/sauce');
+
+
+exports.manageLikeAndDislike = (req, res) => {
+   console.log(req.body);
+};
 
 exports.createSauce = (req, res) => {
    const sauceObject = JSON.parse(req.body.sauce);
@@ -22,7 +25,7 @@ exports.modifySauce = async (req, res) => {
       const filenameToBeDeleted = sauce.imageUrl.split('/images/')[1];
       fs.unlink(`images/${filenameToBeDeleted}`, error => {
          if (error) throw error;
-         console.log(`${filenameToBeDeleted} n'a pas pu être supprimé`);
+         console.log(`${filenameToBeDeleted} a été supprimé avec succès`);
       });
       sauceObject = {
          ...JSON.parse(req.body.sauce),
