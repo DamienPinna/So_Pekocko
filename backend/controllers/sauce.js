@@ -1,6 +1,5 @@
-const Sauce = require('../models/sauce');
 const fs = require('fs');
-
+const Sauce = require('../models/sauce');
 
 exports.manageLikeAndDislike = (req, res) => {
    console.log(req.body);

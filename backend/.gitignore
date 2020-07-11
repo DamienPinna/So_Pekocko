@@ -1,4 +1,4 @@
 node_modules
-pnpm-lock.yaml
 config-db.js
 config-token.js
+package-lock.json
