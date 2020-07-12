@@ -1,8 +1,34 @@
 const fs = require('fs');
 const Sauce = require('../models/sauce');
 
-exports.manageLikeAndDislike = (req, res) => {
-   Sauce.updateOne({ _id: req.params.id }, {likes: req.body.like})
+exports.manageLikeAndDislike = async (req, res) => {
+   const sauce = await Sauce.findOne({_id: req.params.id});
+
+   const likeAndDislikeUpdate = {
+      likes: sauce.likes,
+      dislikes: sauce.dislikes,
+      userLiked: sauce.userLiked,
+      userDisliked: sauce.userDisliked
+   };
+
+   switch (req.body.like) {
+      //L'utilisateur aime la sauce.
+      case 1: 
+         likeAndDislikeUpdate.likes += 1;
+         likeAndDislikeUpdate.userLiked.push(req.body.userId);
+         console.log(likeAndDislikeUpdate);
+         break;
+      //L'utilisateur annule ce qu'il aime ou n'aime pas.
+      case 0: console.log(0);
+         break;
+      //L'utilisateur n'aime pas la sauce.
+      case -1:
+         likeAndDislikeUpdate.dislikes += 1;
+         likeAndDislikeUpdate.userDisliked.push(req.body.userId);
+         break;
+      default: console.log('Erreur dans la requête !');
+   }
+   Sauce.updateOne({ _id: req.params.id }, {...likeAndDislikeUpdate, _id: req.params.id})
       .then(() => res.status(200).json({ message: 'Like'}))
       .catch(error => res.status(400).json({error}));
 };
