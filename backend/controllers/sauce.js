@@ -10,14 +10,20 @@ exports.manageLikeAndDislike = async (req, res) => {
       userLiked: sauce.userLiked,
       userDisliked: sauce.userDisliked
    };
+   const indexUserIdInUserLiked = sauce.userLiked.findIndex(userIdInUserLiked => userIdInUserLiked === req.body.userId);
+   const indexUserIdInUserDisliked = sauce.userDisliked.findIndex(userIdInUserDisliked => userIdInUserDisliked === req.body.userId);
 
    switch (req.body.like) {
       //L'utilisateur aime la sauce.
       case 1:
-         const indexUserIdInUserLiked = sauce.userLiked.findIndex(userIdInUserLiked => userIdInUserLiked === req.body.userId);
-         if (indexUserIdInUserLiked === -1) {
+         if (indexUserIdInUserLiked === -1 && indexUserIdInUserDisliked === -1) {
             likeAndDislikeUpdate.likes += 1;
             likeAndDislikeUpdate.userLiked.push(req.body.userId);
+         } else if (indexUserIdInUserLiked === -1 && indexUserIdInUserDisliked !== -1) {
+            likeAndDislikeUpdate.likes += 1;
+            likeAndDislikeUpdate.dislikes -= 1;
+            likeAndDislikeUpdate.userLiked.push(req.body.userId);
+            likeAndDislikeUpdate.userDisliked.splice(indexUserIdInUserDisliked, 1);
          } else {
             res.status(200).json({ message: "L'utilisateur aime déjà la sauce."});
          };
@@ -27,10 +33,14 @@ exports.manageLikeAndDislike = async (req, res) => {
          break;
       //L'utilisateur n'aime pas la sauce.
       case -1:
-         const indexUserIdInUserDisliked = sauce.userDisliked.findIndex(userIdInUserDisliked => userIdInUserDisliked === req.body.userId);
-         if (indexUserIdInUserDisliked === -1) {
+         if (indexUserIdInUserDisliked === -1 && indexUserIdInUserLiked === -1) {
             likeAndDislikeUpdate.dislikes += 1;
             likeAndDislikeUpdate.userDisliked.push(req.body.userId);
+         } else if (indexUserIdInUserDisliked === -1 && indexUserIdInUserLiked !== -1) {
+            likeAndDislikeUpdate.dislikes += 1;
+            likeAndDislikeUpdate.likes -= 1;
+            likeAndDislikeUpdate.userDisliked.push(req.body.userId);
+            likeAndDislikeUpdate.userLiked.splice(indexUserIdInUserLiked, 1);
          } else {
             res.status(200).json({ message: "L'utilisateur n'aime déjà pas la sauce."});
          };
