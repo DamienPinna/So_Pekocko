@@ -2,7 +2,9 @@ const fs = require('fs');
 const Sauce = require('../models/sauce');
 
 exports.manageLikeAndDislike = (req, res) => {
-   console.log(req.body);
+   Sauce.updateOne({ _id: req.params.id }, {likes: req.body.like})
+      .then(() => res.status(200).json({ message: 'Like'}))
+      .catch(error => res.status(400).json({error}));
 };
 
 exports.createSauce = (req, res) => {

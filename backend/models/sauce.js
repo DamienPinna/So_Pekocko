@@ -10,8 +10,8 @@ const sauceSchema = new Schema({
    mainPepper: {type: String, required: true},
    imageUrl: {type: String, required: true},
    heat: {type: Number, required: true},
-   likes: Number,
-   dislikes: Number,
+   likes: {type: Number, default: 0},
+   dislikes: {type: Number, default: 0},
    userLiked: Array,
    userDisliked: Array
 });
