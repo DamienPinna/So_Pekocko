@@ -29,7 +29,14 @@ exports.manageLikeAndDislike = async (req, res) => {
          };
          break;
       //L'utilisateur annule ce qu'il aime ou n'aime pas.
-      case 0: console.log(0);
+      case 0:
+         if (indexUserIdInUserLiked !== -1) {
+            likeAndDislikeUpdate.likes -= 1;
+            likeAndDislikeUpdate.userLiked.splice(indexUserIdInUserLiked, 1);
+         } else {
+            likeAndDislikeUpdate.dislikes -= 1;
+            likeAndDislikeUpdate.userDisliked.splice(indexUserIdInUserDisliked, 1);
+         }
          break;
       //L'utilisateur n'aime pas la sauce.
       case -1:
