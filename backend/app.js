@@ -9,12 +9,12 @@ const sauceRoutes = require('./routes/sauce');
 
 const app = express();
 
-//Connexion à la base de données MongoDB Atlas.
+/* Connexion à la base de données MongoDB Atlas */
 mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
   .then(() => console.log('Connexion à MongoDB réussie.'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-//CORS
+/* CORS */
 app.use((req, res, next) => {
    res.setHeader('Access-Control-Allow-Origin', '*');
    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');

@@ -6,6 +6,7 @@ const MIME_TYPES = {
    'image/png': 'png'
 };
 
+/* Indique la destination de l'image à enregistrer et spécifie le nom du fichier */
 const storage = multer.diskStorage({
    destination: (req, file, callback) => {
       callback(null, 'images');
@@ -17,6 +18,7 @@ const storage = multer.diskStorage({
    }
 });
 
+/* Filtre le format de l'image voulant être uploadée */
 const fileFilter = (req, file, callback) => {
    if(file.mimetype === "image/jpg" || file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
       callback(null, true);
@@ -25,6 +27,7 @@ const fileFilter = (req, file, callback) => {
    };
 };
 
+/* Filtre le poids de l'image voulant être uploadée */
 const fileSize = {fileSize: 1024 * 1024 * 5}; //limite la taille de l'image à 5Mo
 
 

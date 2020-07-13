@@ -4,6 +4,9 @@ const bcrypt = require('bcrypt');
 
 const User = require('../models/user');
 
+/**
+ * Créé un utilisateur et chiffre son mot de passe.
+ */
 exports.signup = async (req, res) => {
    try {
       const hash = await bcrypt.hash(req.body.password, 10);
@@ -19,6 +22,9 @@ exports.signup = async (req, res) => {
    };
 };
 
+/**
+ * Identifie un utilisateur.
+ */
 exports.login = async (req, res) => {
    try {
       const user = await User.findOne({email: req.body.email});

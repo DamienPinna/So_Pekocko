@@ -1,64 +1,9 @@
 const fs = require('fs');
 const Sauce = require('../models/sauce');
 
-exports.manageLikeAndDislike = async (req, res) => {
-   const sauce = await Sauce.findOne({_id: req.params.id});
-
-   const likeAndDislikeUpdate = {
-      likes: sauce.likes,
-      dislikes: sauce.dislikes,
-      userLiked: sauce.userLiked,
-      userDisliked: sauce.userDisliked
-   };
-   const indexUserIdInUserLiked = sauce.userLiked.findIndex(userIdInUserLiked => userIdInUserLiked === req.body.userId);
-   const indexUserIdInUserDisliked = sauce.userDisliked.findIndex(userIdInUserDisliked => userIdInUserDisliked === req.body.userId);
-
-   switch (req.body.like) {
-      //L'utilisateur aime la sauce.
-      case 1:
-         if (indexUserIdInUserLiked === -1 && indexUserIdInUserDisliked === -1) {
-            likeAndDislikeUpdate.likes += 1;
-            likeAndDislikeUpdate.userLiked.push(req.body.userId);
-         } else if (indexUserIdInUserLiked === -1 && indexUserIdInUserDisliked !== -1) {
-            likeAndDislikeUpdate.likes += 1;
-            likeAndDislikeUpdate.dislikes -= 1;
-            likeAndDislikeUpdate.userLiked.push(req.body.userId);
-            likeAndDislikeUpdate.userDisliked.splice(indexUserIdInUserDisliked, 1);
-         } else {
-            res.status(200).json({ message: "L'utilisateur aime déjà la sauce."});
-         };
-         break;
-      //L'utilisateur annule ce qu'il aime ou n'aime pas.
-      case 0:
-         if (indexUserIdInUserLiked !== -1) {
-            likeAndDislikeUpdate.likes -= 1;
-            likeAndDislikeUpdate.userLiked.splice(indexUserIdInUserLiked, 1);
-         } else {
-            likeAndDislikeUpdate.dislikes -= 1;
-            likeAndDislikeUpdate.userDisliked.splice(indexUserIdInUserDisliked, 1);
-         }
-         break;
-      //L'utilisateur n'aime pas la sauce.
-      case -1:
-         if (indexUserIdInUserDisliked === -1 && indexUserIdInUserLiked === -1) {
-            likeAndDislikeUpdate.dislikes += 1;
-            likeAndDislikeUpdate.userDisliked.push(req.body.userId);
-         } else if (indexUserIdInUserDisliked === -1 && indexUserIdInUserLiked !== -1) {
-            likeAndDislikeUpdate.dislikes += 1;
-            likeAndDislikeUpdate.likes -= 1;
-            likeAndDislikeUpdate.userDisliked.push(req.body.userId);
-            likeAndDislikeUpdate.userLiked.splice(indexUserIdInUserLiked, 1);
-         } else {
-            res.status(200).json({ message: "L'utilisateur n'aime déjà pas la sauce."});
-         };
-         break;
-      default: console.log('Erreur dans la requête !');
-   }
-   Sauce.updateOne({ _id: req.params.id }, {...likeAndDislikeUpdate, _id: req.params.id})
-      .then(() => res.status(200).json({ message: 'Like'}))
-      .catch(error => res.status(400).json({error}));
-};
-
+/**
+ * Créé une sauce.
+ */
 exports.createSauce = (req, res) => {
    const sauceObject = JSON.parse(req.body.sauce);
    delete sauceObject._id;
@@ -71,6 +16,9 @@ exports.createSauce = (req, res) => {
     .catch(error => res.status(400).json({error}));
 };
 
+/**
+ * Modifie une sauce.
+ */
 exports.modifySauce = async (req, res) => {
    let sauceObject;
    if (req.file) {
@@ -92,6 +40,9 @@ exports.modifySauce = async (req, res) => {
       .catch(error => res.status(400).json({error}));
 };
 
+/**
+ * Supprime une sauce.
+ */
 exports.deleteSauce = async (req, res) => {
    try {
       const sauce = await Sauce.findOne({_id: req.params.id});
@@ -106,12 +57,18 @@ exports.deleteSauce = async (req, res) => {
    };
 };
 
+/**
+ * Cherche une sauce.
+ */
 exports.getOneSauce = (req, res) => {
    Sauce.findOne({_id: req.params.id})
       .then(sauce => res.status(200).json(sauce))
       .catch(error => res.status(400).json({error}));
 };
 
+/**
+ * Cherche toutes les sauces.
+ */
 exports.getAllSauces = (req, res) => {
    Sauce.find()
       .then(sauces => res.status(200).json(sauces))
