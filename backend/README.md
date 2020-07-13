@@ -1,0 +1,1 @@
+Taper 'npm start' pour démarrer le serveur. Si tout s'est bien passé la console affiche "Connexion à MongoDB réussie".
