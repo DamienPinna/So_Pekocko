@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 const path = require('path');
 
 const userRoutes = require('./routes/user');
@@ -23,7 +24,7 @@ app.use((req, res, next) => {
  });
 
 app.use(bodyParser.json());
-// mettre ic helmet
+app.use(helmet());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
