@@ -3,6 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const fs = require('fs');
+const morgan = require('morgan');
 const path = require('path');
 
 const userRoutes = require('./routes/user');
@@ -25,6 +27,9 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 app.use(helmet());
+
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
