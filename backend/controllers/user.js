@@ -26,7 +26,7 @@ exports.signup = async (req, res) => {
          res.status(500).json({error});
       };
    } else {
-      res.status(500).json({message: 'Mot de passe inférieur a 8 caractères et/ou adresse mail invalide. '})
+      res.status(500).json({message: 'Mot de passe inférieur à 8 caractères et/ou adresse mail invalide. '})
    };
 };
 

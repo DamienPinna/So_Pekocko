@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
       sauceObject = { ...req.body };
    };
    const regex = /<|>|"|&/
-   isDangerous = regex.test(sauceObject.name) || regex.test(sauceObject.manufacturer) || regex.test(sauceObject.description) || regex.test(sauceObject.mainPepper);
+   const isDangerous = regex.test(sauceObject.name) || regex.test(sauceObject.manufacturer) || regex.test(sauceObject.description) || regex.test(sauceObject.mainPepper);
    if (isDangerous) {
       res.status(500).json({message: 'Attaque XSS suspectée.'})
    } else {
