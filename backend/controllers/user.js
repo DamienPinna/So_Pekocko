@@ -1,11 +1,12 @@
 require('dotenv').config()
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const CryptoJS = require('crypto-js');
 
 const User = require('../models/user');
 
 /**
- * Créé un utilisateur et chiffre son mot de passe.
+ * Créé un utilisateur et chiffre son adresse mail et son mot de passe.
  */
 exports.signup = async (req, res) => {
    const email = req.body.email;
@@ -14,10 +15,11 @@ exports.signup = async (req, res) => {
 
    if (regex.test(email) && password.length > 7 && password.length < 65) {
       try {
-         const hash = await bcrypt.hash(password, 10);
+         const cipherEmail = CryptoJS.AES.encrypt(email, process.env.KEY).toString();
+         const passwordHash = await bcrypt.hash(password, 10);
          const user = new User({
-            email: email,
-            password: hash
+            email: cipherEmail,
+            password: passwordHash
          });
          user.save()
             .then(() => res.status(201).json({message: 'Utilisateur enregistré.'}))
@@ -35,7 +37,19 @@ exports.signup = async (req, res) => {
  */
 exports.login = async (req, res) => {
    try {
-      const user = await User.findOne({email: req.body.email});
+      const users = await User.find({});
+      let user = '';
+
+      users.forEach((element) => {
+         let bytes  = CryptoJS.AES.decrypt(element.email, process.env.KEY);
+         let originalEmail = bytes.toString(CryptoJS.enc.Utf8);
+      
+         if (originalEmail === req.body.email) {
+            user = element;
+            return;
+         };
+      });
+
       if(!user) return res.status(404).json({error: 'Utilisateur non trouvé !'});
       try {
          const valid = await bcrypt.compare(req.body.password, user.password);

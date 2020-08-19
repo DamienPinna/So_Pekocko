@@ -3,7 +3,7 @@ module.exports = (req, res, next) => {
    const regex = /<|>|"|&/;
    const isDangerous = regex.test(userObject.email) || regex.test(userObject.password);
    if (isDangerous) {
-      res.status(500).json({message: 'Attaque XSS suspectée.'})
+      res.status(500).json({message: 'Attaque XSS suspectée.'});
    } else {
       next();
    };
